@@ -1,5 +1,9 @@
 "use strict";
 
+function rand1To100() {
+    return Math.ceil(Math.random() * 100);
+}
+
 function stringToNumber(str) {
     if (str && +str) {
         return +str;
@@ -8,32 +12,42 @@ function stringToNumber(str) {
     } else return false;
 }
 
-function game(rNum) {
-    let result;
+function game() {
+    let answer;
+    let tryСounter = 10;
+    const randNum = rand1To100();
 
     function gameAttempt(text) {
-        let gamerNum = prompt(text, '');
-        if (gamerNum === null) {
-            alert("Игра окончена");
-            result = "game over";
+
+        if (tryСounter <= 0) {
+            answer = confirm("Попытки закончились, хотите сыграть еще?");
+            if (answer) game();
             return;
         }
+
+        let gamerNum = prompt(text + tryСounter, '');
+
+        if (gamerNum === null) {
+            alert("Игра окончена");
+            return;
+        }
+
         gamerNum = stringToNumber(gamerNum);
+
         if (gamerNum) {
-            if (gamerNum > rNum) gameAttempt("Загаданное число меньше. Введите другое число");
-            else if (gamerNum < rNum) gameAttempt("Загаданное число больше. Введите другое число");
-            else if (gamerNum == rNum) {
-                alert("Поздравляю, Вы угадали!!!");
-                result = "win";
+            tryСounter--;
+            if (gamerNum > randNum) gameAttempt("Загаданное число меньше. Попыток осталось: ");
+            else if (gamerNum < randNum) gameAttempt("Загаданное число больше. Попыток осталось: ");
+            else if (gamerNum == randNum) {
+                answer = confirm("Поздравляю, Вы угадали!!! Хотите сыграть еще?");
+                if (answer) game();
+                return;
             }
         }
-        else gameAttempt("Введите число!");
+        else gameAttempt("Введите число! Попыток осталось: ");
     }
 
-    gameAttempt("Введите число от 1 до 100");
-    return result;
+    return gameAttempt("Введите число от 1 до 100. Количество попыток: ");
 }
 
-const randNum = Math.ceil(Math.random() * 100);
-
-game(randNum);
+game();
